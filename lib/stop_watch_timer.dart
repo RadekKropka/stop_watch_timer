@@ -40,23 +40,23 @@ class StopWatchTimer {
   final PublishSubject<int> _elapsedTime = PublishSubject<int>();
 
   final BehaviorSubject<int> _rawTimeController =
-      BehaviorSubject<int>.seeded(0);
+  BehaviorSubject<int>.seeded(0);
   ValueStream<int> get rawTime => _rawTimeController;
 
   final BehaviorSubject<int> _secondTimeController =
-      BehaviorSubject<int>.seeded(0);
+  BehaviorSubject<int>.seeded(0);
   ValueStream<int> get secondTime => _secondTimeController;
 
   final BehaviorSubject<int> _minuteTimeController =
-      BehaviorSubject<int>.seeded(0);
+  BehaviorSubject<int>.seeded(0);
   ValueStream<int> get minuteTime => _minuteTimeController;
 
   final BehaviorSubject<List<StopWatchRecord>> _recordsController =
-      BehaviorSubject<List<StopWatchRecord>>.seeded([]);
+  BehaviorSubject<List<StopWatchRecord>>.seeded([]);
   ValueStream<List<StopWatchRecord>> get records => _recordsController;
 
   final PublishSubject<StopWatchExecute> _executeController =
-      PublishSubject<StopWatchExecute>();
+  PublishSubject<StopWatchExecute>();
   Stream<StopWatchExecute> get execute => _executeController;
   Sink<StopWatchExecute> get onExecute => _executeController.sink;
 
@@ -70,27 +70,67 @@ class StopWatchTimer {
 
   /// Get display time.
   static String getDisplayTime(
-    int value, {
-    bool hours = true,
-    bool minute = true,
-    bool second = true,
-    bool milliSecond = true,
-    String hoursRightBreak = ':',
-    String minuteRightBreak = ':',
-    String secondRightBreak = '.',
-  }) {
-    final hoursStr = getDisplayTimeHours(value);
+      int value, {
+        bool hours = false,
+        bool minute = true,
+        bool second = true,
+        bool milliSecond = true,
+        // String hoursRightBreak = ':',
+        String minuteRightBreak = ':',
+        // String secondRightBreak = ':',
+      }) {
+    // final hoursStr = getDisplayTimeHours(value);
+    final mStr = getDisplayTimeMinute(value, hours: hours);
+    final sStr = getDisplayTimeSecond(value);
+    // final msStr = getDisplayTimeMilliSecond(value);
+    var result = '';
+    /*if (hours) {
+      result += '$hoursStr';
+    }*/
+    if (minute) {
+      /*if (hours) {
+        result += hoursRightBreak;
+      }*/
+      result += '$mStr';
+    }
+    if (second) {
+      if (minute) {
+        result += minuteRightBreak;
+      }
+      result += '$sStr';
+    }
+    /*if (milliSecond) {
+      if (second) {
+        result += secondRightBreak;
+      }
+      result += '$msStr';
+    }*/
+    return result;
+  }
+
+  /// Get display time miliseconds.
+  static String getDisplayTimeMsec(
+      int value, {
+        bool hours = false,
+        bool minute = false,
+        bool second = false,
+        bool milliSecond = true,
+        // String hoursRightBreak = ':',
+        String minuteRightBreak = ':',
+        String secondRightBreak = ':',
+      }) {
+    // final hoursStr = getDisplayTimeHours(value);
     final mStr = getDisplayTimeMinute(value, hours: hours);
     final sStr = getDisplayTimeSecond(value);
     final msStr = getDisplayTimeMilliSecond(value);
     var result = '';
-    if (hours) {
+    /*if (hours) {
       result += '$hoursStr';
-    }
+    }*/
     if (minute) {
-      if (hours) {
+      /*if (hours) {
         result += hoursRightBreak;
-      }
+      }*/
       result += '$mStr';
     }
     if (second) {
@@ -107,6 +147,8 @@ class StopWatchTimer {
     }
     return result;
   }
+
+
 
   /// Get display hours time.
   static String getDisplayTimeHours(int mSec) {
